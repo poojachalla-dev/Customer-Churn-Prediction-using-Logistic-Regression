@@ -1,5 +1,3 @@
-from reading_data import df
-
 def create_features(df):
 
     df["AvgMonthlySpend"] = df["TotalCharges"] / (df["tenure"] + 1)
