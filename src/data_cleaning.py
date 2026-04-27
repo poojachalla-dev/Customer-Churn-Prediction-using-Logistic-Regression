@@ -1,10 +1,17 @@
 from libraries import pd
-from reading_data import df
+from reading_data import df, file_name
 
-df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
-df.dropna(subset=["TotalCharges"], inplace=True)
+def cleaned_data(df):
 
-# This line converts the target column Churn from text labels into numeric values:
-df["Churn"] = df["Churn"].map({"Yes":1,"No":0})
+    df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
+    df.dropna(subset=["TotalCharges"], inplace=True)
 
-print(f"Churn:", df["Churn"])
+    # Save back to same file
+    df.to_csv(file_name, index=False)
+
+    # This line converts the target column Churn from text labels into numeric values:
+    df["Churn"] = df["Churn"].map({"Yes":1,"No":0})
+
+    print(f"Churn:", df["Churn"])
+
+    return(df)
