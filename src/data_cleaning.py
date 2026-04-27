@@ -1,4 +1,4 @@
-from libraries import pd
+import pandas as pd
 
 def cleaned_data(df):
 
