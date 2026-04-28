@@ -3,7 +3,7 @@ from feature_engineering import create_features
 from reading_data import load_data
 from eda import run_eda
 from preprocess import build_preprocessor
-from train import split_data, train_model
+from train import split_data, train_model, run_cross_validation
 from pipeline import build_pipeline
 from evaluate import evaluate_model
 from logger import setup_logger
@@ -55,6 +55,19 @@ try:
     # Pipeline
     logger.info("Creating pipeline...")
     pipeline = build_pipeline(preprocessor)
+
+    # Cross Validation
+    logger.info("Running cross validation...")
+    cv_scores = run_cross_validation(
+        pipeline,
+        X_train,
+        y_train
+    )
+
+    logger.info(
+        f"Mean Cross Validation ROC-AUC: "
+        f"{cv_scores.mean():.4f}"
+    )
 
     # Training
     logger.info("Training model...")
