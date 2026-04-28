@@ -2,6 +2,7 @@ from data_cleaning import cleaned_data
 from feature_engineering import create_features
 from reading_data import load_data
 from eda import eda
+from preprocess import build_preprocessor
 import os
 
 # Load data
@@ -21,3 +22,11 @@ df.to_csv(file_path, index=False)
 
 # EDA
 df = eda(df)
+
+# Split features
+X = df.drop(["customerID", "Churn"], axis=1)
+y = df["Churn"]
+
+# Preprocessing
+preprocessor = build_preprocessor(X)
+print(f"X.shape:", X.shape)
