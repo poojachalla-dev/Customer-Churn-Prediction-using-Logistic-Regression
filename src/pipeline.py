@@ -16,7 +16,8 @@ def build_pipeline(preprocessor):
             ("prep", preprocessor),
             ("model", LogisticRegression(
                 max_iter=2000,
-                class_weight="balanced"
+                solver="liblinear",
+                random_state=42
             ))
         ])
 
