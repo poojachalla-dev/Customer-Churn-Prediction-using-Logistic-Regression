@@ -3,7 +3,8 @@ from feature_engineering import create_features
 from reading_data import load_data
 from eda import eda
 from preprocess import build_preprocessor
-from train import split_data
+from train import split_data, train_model
+from pipeline import build_pipeline 
 import os
 
 # Load data
@@ -39,3 +40,14 @@ X_test_processed = preprocessor.transform(X_test)
 
 print(f"(X_train_processed:", X_train_processed.shape)
 print(f"X_test_processed:", X_test_processed.shape)
+
+#Pipeline
+pipeline = build_pipeline(preprocessor)
+print("Pipeline created:")
+print(pipeline)
+
+#Model
+model = train_model(pipeline, X_train, y_train)
+print("Model trained successfully")
+
+print(model.predict(X_test.head(5)))

@@ -10,7 +10,8 @@ def split_data(X, y):
 )
     return X_train, X_test, y_train, y_test
 
-
-
+def train_model(pipeline, X_train, y_train):
+    pipeline.fit(X_train, y_train)
+    return pipeline
 
 
