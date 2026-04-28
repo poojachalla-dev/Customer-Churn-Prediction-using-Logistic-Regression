@@ -3,6 +3,7 @@ from feature_engineering import create_features
 from reading_data import load_data
 from eda import eda
 from preprocess import build_preprocessor
+from train import split_data
 import os
 
 # Load data
@@ -27,6 +28,14 @@ df = eda(df)
 X = df.drop(["customerID", "Churn"], axis=1)
 y = df["Churn"]
 
+# Split Train and Test Set
+X_train, X_test, y_train, y_test = split_data(X, y)
+
 # Preprocessing
-preprocessor = build_preprocessor(X)
-print(f"X.shape:", X.shape)
+preprocessor = build_preprocessor(X_train)
+
+X_train_processed = preprocessor.fit_transform(X_train)
+X_test_processed = preprocessor.transform(X_test)
+
+print(f"(X_train_processed:", X_train_processed.shape)
+print(f"X_test_processed:", X_test_processed.shape)
