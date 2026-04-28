@@ -4,50 +4,64 @@ from reading_data import load_data
 from eda import eda
 from preprocess import build_preprocessor
 from train import split_data, train_model
-from pipeline import build_pipeline 
+from pipeline import build_pipeline
+from logger import setup_logger
+
 import os
 
-# Load data
-df = load_data()
+logger = setup_logger()
 
-# Data Cleaning
-df = cleaned_data(df)
+try:
+    logger.info("Project started")
 
-# Feature engineering
-df = create_features(df)
+    # Load data
+    logger.info("Loading data...")
+    df = load_data()
+    logger.info(f"Data loaded successfully: {df.shape}")
 
-# Save the data back to file
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-file_path = os.path.join(BASE_DIR, "Data", "Cleaned_Data.csv")
+    # Cleaning
+    logger.info("Cleaning data...")
+    df = cleaned_data(df)
 
-df.to_csv(file_path, index=False)
+    # Feature Engineering
+    logger.info("Creating features...")
+    df = create_features(df)
 
-# EDA
-df = eda(df)
+    # Save cleaned data
+    BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+    file_path = os.path.join(BASE_DIR, "Data", "Cleaned_Data.csv")
+    df.to_csv(file_path, index=False)
 
-# Split features
-X = df.drop(["customerID", "Churn"], axis=1)
-y = df["Churn"]
+    logger.info("Cleaned data saved successfully")
 
-# Split Train and Test Set
-X_train, X_test, y_train, y_test = split_data(X, y)
+    # EDA
+    logger.info("Running EDA...")
+    eda(df)
 
-# Preprocessing
-preprocessor = build_preprocessor(X_train)
+    # Features / Target
+    X = df.drop(["customerID", "Churn"], axis=1)
+    y = df["Churn"]
 
-X_train_processed = preprocessor.fit_transform(X_train)
-X_test_processed = preprocessor.transform(X_test)
+    # Split
+    logger.info("Splitting train/test data...")
+    X_train, X_test, y_train, y_test = split_data(X, y)
 
-print(f"(X_train_processed:", X_train_processed.shape)
-print(f"X_test_processed:", X_test_processed.shape)
+    # Preprocessor
+    logger.info("Building preprocessor...")
+    preprocessor = build_preprocessor(X_train)
 
-#Pipeline
-pipeline = build_pipeline(preprocessor)
-print("Pipeline created:")
-print(pipeline)
+    # Pipeline
+    logger.info("Creating pipeline...")
+    pipeline = build_pipeline(preprocessor)
 
-#Model
-model = train_model(pipeline, X_train, y_train)
-print("Model trained successfully")
+    # Training
+    logger.info("Training model...")
+    model = train_model(pipeline, X_train, y_train)
 
-print(model.predict(X_test.head(5)))
+    preds = model.predict(X_test.head(5))
+    logger.info(f"Sample Predictions: {preds}")
+
+    logger.info("Project completed successfully")
+
+except Exception as e:
+    logger.error(f"Project failed: {e}", exc_info=True)
