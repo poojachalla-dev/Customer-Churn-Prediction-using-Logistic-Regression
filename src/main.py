@@ -1,7 +1,7 @@
 from data_cleaning import cleaned_data
 from feature_engineering import create_features
 from reading_data import load_data
-from eda import eda
+from eda import run_eda
 from preprocess import build_preprocessor
 from train import split_data, train_model
 from pipeline import build_pipeline
@@ -36,7 +36,7 @@ try:
 
     # EDA
     logger.info("Running EDA...")
-    eda(df)
+    summary = run_eda(df)
 
     # Features / Target
     X = df.drop(["customerID", "Churn"], axis=1)
