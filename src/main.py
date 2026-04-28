@@ -5,6 +5,7 @@ from eda import run_eda
 from preprocess import build_preprocessor
 from train import split_data, train_model
 from pipeline import build_pipeline
+from evaluate import evaluate_model
 from logger import setup_logger
 
 import os
@@ -61,7 +62,12 @@ try:
     preds = model.predict(X_test.head(5))
     logger.info(f"Sample Predictions: {preds}")
 
-    logger.info("Project completed successfully")
+    # Evaluate
+    logger.info("Evaluating model...")
+    evaluate_model(model, X_test, y_test)
+    logger.info("Evaluation completed.")
+
+    logger.info("Customer churn pipeline executed successfully")
 
 except Exception as e:
     logger.error(f"Project failed: {e}", exc_info=True)
