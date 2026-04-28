@@ -7,6 +7,7 @@ from train import split_data, train_model, run_cross_validation
 from pipeline import build_pipeline
 from evaluate import evaluate_model
 from logger import setup_logger
+from tune import tune_model
 
 import joblib
 import os
@@ -69,10 +70,20 @@ try:
         f"{cv_scores.mean():.4f}"
     )
 
-    # Training
-    logger.info("Training model...")
-    model = train_model(pipeline, X_train, y_train)
+    # Hyperparameter Tuning
+    logger.info("Starting hyperparameter tuning...")
+    model = tune_model(
+        pipeline,
+        X_train,
+        y_train
+    )
 
+    logger.info("Best tuned model selected.")
+
+    preds = model.predict(X_test.head(5))
+    logger.info(f"Sample Predictions: {preds}")
+
+    # Sample Predictions
     preds = model.predict(X_test.head(5))
     logger.info(f"Sample Predictions: {preds}")
 
