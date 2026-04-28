@@ -5,7 +5,7 @@ from eda import run_eda
 from preprocess import build_preprocessor
 from train import split_data, train_model, run_cross_validation
 from pipeline import build_pipeline
-from evaluate import evaluate_model
+from evaluate import evaluate_model, find_best_threshold, evaluate_with_threshold
 from logger import setup_logger
 from tune import tune_model
 
@@ -87,12 +87,20 @@ try:
     preds = model.predict(X_test.head(5))
     logger.info(f"Sample Predictions: {preds}")
 
-    # Evaluate
+    # Default evaluation
     logger.info("Evaluating model...")
     evaluate_model(model, X_test, y_test)
     logger.info("Evaluation completed.")
 
-    logger.info("Saving trained model...")
+    # Threshold optimization
+    logger.info("Evaluating Best Threshold...")
+    best_threshold = find_best_threshold(model, X_test, y_test)
+
+    logger.info(f"Best Threshold: {best_threshold}")
+
+    # Optimized evaluation
+    logger.info("Optimizing  Evaluation...")
+    evaluate_with_threshold(model, X_test, y_test, best_threshold)
 
     # Save
     model_path = os.path.join(BASE_DIR, "models")
