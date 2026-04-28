@@ -8,6 +8,7 @@ from pipeline import build_pipeline
 from evaluate import evaluate_model, find_best_threshold, evaluate_with_threshold
 from logger import setup_logger
 from tune import tune_model
+from feature_importance import get_feature_importance, show_top_features
 
 import joblib
 import os
@@ -101,6 +102,18 @@ try:
     # Optimized evaluation
     logger.info("Optimizing  Evaluation...")
     evaluate_with_threshold(model, X_test, y_test, best_threshold)
+
+    # Feature Importance
+    logger.info("Extracting feature importance...")
+
+    importance_df = get_feature_importance(
+        model,
+        preprocessor,
+        X_train
+    )
+
+    top_features = show_top_features(importance_df, top_n=10)
+
 
     # Save
     model_path = os.path.join(BASE_DIR, "models")
