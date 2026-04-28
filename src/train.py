@@ -55,6 +55,7 @@ def train_model(pipeline, X_train, y_train):
         return pipeline
 
     except Exception as e:
-        logging.exception("Error occurred during mo
+        logging.exception("Error occurred during model training")
+        raise
 
 
