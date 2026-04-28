@@ -8,6 +8,7 @@ from pipeline import build_pipeline
 from evaluate import evaluate_model
 from logger import setup_logger
 
+import joblib
 import os
 
 logger = setup_logger()
@@ -67,7 +68,18 @@ try:
     evaluate_model(model, X_test, y_test)
     logger.info("Evaluation completed.")
 
+    logger.info("Saving trained model...")
+
+    # Save
+    model_path = os.path.join(BASE_DIR, "models")
+    os.makedirs(model_path, exist_ok=True)
+
+    joblib.dump(model, os.path.join(model_path, "churn_model.pkl"))
+
+    logger.info("Model saved successfully")
+
     logger.info("Customer churn pipeline executed successfully")
+
 
 except Exception as e:
     logger.error(f"Project failed: {e}", exc_info=True)
