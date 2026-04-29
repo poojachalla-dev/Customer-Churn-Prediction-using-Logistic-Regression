@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from src.feature_engineering import create_features
 import pandas as pd
 import logging
 
@@ -41,6 +42,8 @@ def predict(data: CustomerInput):
 
         input_df = pd.DataFrame([data.dict()])
 
+        input_df = create_features(input_df)
+
         prediction = model.predict(input_df)[0]
         probability = model.predict_proba(input_df)[0][1]
 
@@ -55,9 +58,9 @@ def predict(data: CustomerInput):
         return result
 
     except Exception as e:
-        logger.exception("Prediction failed")
+        logging.exception("Prediction error")
         raise HTTPException(
             status_code=500,
-            detail="Prediction failed"
+            detail=str(e)
         )
 
