@@ -219,7 +219,7 @@ cd Customer-Churn-Prediction-using-Logistic-Regression
 ## 2. Create Virtual Environment
 
 ```bash
-python -m venv venv
+py  -3.10 venv venv
 venv\Scripts\activate
 ```
 
